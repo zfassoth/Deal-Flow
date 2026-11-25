@@ -369,8 +369,13 @@ function fallbackMessages(c, profile = {}, history = []) {
     ]
   ];
   const n=c.status==='Sold'?soldMonth(c):0;
-  const anniversary=[`Happy ${n/12}-year vehicle anniversary! How's your ${vehicle} treating you?`,`It's your ${n/12}-year anniversary with your ${vehicle}! If you have any ownership questions or want to explore options, I'm happy to help.`,`Happy ${n/12}-year anniversary with your ${vehicle}! Let me know if there's anything I can help with.`];
-  const stage=c.status==='Sold'?(n>=12?anniversary:soldStages[Math.min(n/3,3)]):unsoldStages[Math.min(count,3)];
+  const elapsed=n<12?`${n} months`:`${n/12} ${n===12?'year':'years'}`;
+  const anniversary=[`It's already been ${elapsed} since you purchased your ${vehicle}! How's it treating you?`,`It's been ${elapsed} since you purchased your ${vehicle}. I wanted to check in and see if you have any ownership questions or need anything.`,`Happy ${n/12}-year vehicle anniversary! It's been ${elapsed} since you purchased your ${vehicle}. Is there anything I can help with?`];
+  const stage=c.status==='Sold'?(n>=12?anniversary:n>0?[
+    `It's already been ${elapsed} since you picked up your ${vehicle}! How's everything going with it?`,
+    `It's been ${elapsed} since you purchased your ${vehicle}. ${soldStages[Math.min(n/3,3)][1]}`,
+    `It's been ${elapsed} since you purchased your ${vehicle}. Is everything going well, or is there anything I can help with?`
+  ]:soldStages[0]):unsoldStages[Math.min(count,3)];
   return {
     casual: `Hey ${first}, ${intro}${stage[0]}`,
     helpful: `Hey ${first}, ${intro}${stage[1]}`,
